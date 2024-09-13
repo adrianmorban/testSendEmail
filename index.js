@@ -1,27 +1,42 @@
-import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
-const snsClient = new SNSClient({ region: process.env.region }); // Cambia la región si es necesario
+const sesClient = new SESClient({ region: process.env.region });
 
 const handler = async (event) => {
-    // Extrae los parámetros del evento (cuerpo de la petición)
     const message = event.message || 'Default message';
     const subject = event.subject || 'Default subject';
-    const topicArn = process.env.topicArn;
+    const toAddresses = event.toAddresses || process.env.toAddresses.split(',');
+    const fromAddress = event.fromAddress || process.env.fromAddress;
 
     try {
-        const command = new PublishCommand({
-            TopicArn: topicArn,
-            Message: message,
-            Subject: subject,
+        const command = new SendEmailCommand({
+            Source: fromAddress,
+            Destination: {
+                ToAddresses: toAddresses, // Acepta múltiples direcciones
+            },
+            Message: {
+                Subject: {
+                    Data: subject,
+                },
+                Body: {
+                    Text: {
+                        Data: message,
+                    },
+                },
+            },
         });
 
-        const response = await snsClient.send(command);
+        const response = await sesClient.send(command);
+
+        console.log('Email sent successfully', response);
 
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Email sent successfully!', response }),
         };
     } catch (error) {
+        console.error('Error sending email', error);
+
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'Error sending email', error }),
