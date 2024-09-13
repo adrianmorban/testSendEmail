@@ -26,7 +26,7 @@ jobs:
         run: npm install
 
       - name: Zip the build
-        run: zip -r out.zip out
+        run: zip -r sendEmailTest.zip .
 
       - name: Configure AWS credentials from assumed role
         uses: aws-actions/configure-aws-credentials@v3
