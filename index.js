@@ -12,7 +12,7 @@ const handler = async (event) => {
         const command = new SendEmailCommand({
             Source: fromAddress,
             Destination: {
-                ToAddresses: toAddresses, // Acepta múltiples direcciones
+                ToAddresses: toAddresses, 
             },
             Message: {
                 Subject: {
@@ -32,6 +32,11 @@ const handler = async (event) => {
 
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            },
             body: JSON.stringify({ message: 'Email sent successfully!', response }),
         };
     } catch (error) {
@@ -39,6 +44,11 @@ const handler = async (event) => {
 
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            },
             body: JSON.stringify({ message: 'Error sending email', error }),
         };
     }
