@@ -2,6 +2,8 @@ name: Upload zip to S3
 
 on:
   push:
+    branches:
+      - tobedetermined
 
 permissions:
   id-token: write
