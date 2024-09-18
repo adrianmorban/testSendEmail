@@ -2,8 +2,6 @@ name: Upload zip to S3
 
 on:
   push:
-    branches:
-      - master
 
 permissions:
   id-token: write
@@ -35,5 +33,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3
-        run: |
-          aws s3 cp sendEmailTest.zip s3://adrian-morban-send-email/ --acl public-read
+        run: aws s3 cp sendEmailTest.zip s3://adrian-morban-send-email/
